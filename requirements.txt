@@ -1,7 +1,0 @@
-Django
-google-genai
-python-dotenv
-wikipedia
-gunicorn
-dj-database-url
-psycopg[binary]
