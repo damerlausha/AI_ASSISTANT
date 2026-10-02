@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College AI Assistant</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            color: #172033;
+            background:
+                radial-gradient(circle at 10% 10%, #dfe8ff 0, transparent 30%),
+                radial-gradient(circle at 90% 90%, #d9f7f1 0, transparent 30%),
+                linear-gradient(135deg, #f8faff, #eef3ff);
+            display: flex;
+            justify-content: center;
+            padding: 35px 18px;
+        }
+
+        .app {
+            width: min(1000px, 100%);
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin: 25px 0 28px;
+        }
+
+        .college-badge {
+            display: inline-block;
+            padding: 8px 15px;
+            border-radius: 30px;
+            background: #e5ecff;
+            color: #3157d5;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .header h1 {
+            font-size: clamp(38px, 6vw, 58px);
+            line-height: 1.05;
+            letter-spacing: -1.5px;
+            margin-bottom: 12px;
+        }
+
+        .header h1 span {
+            color: #3157d5;
+        }
+
+        .header p {
+            max-width: 650px;
+            margin: auto;
+            color: #697386;
+            font-size: 16px;
+        }
+
+        /* Main AI Card */
+        .ai-card {
+            background: rgba(255,255,255,.88);
+            border: 1px solid rgba(220,226,240,.95);
+            border-radius: 28px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(31,47,87,.12);
+        }
+
+        .ai-top {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            margin-bottom: 20px;
+        }
+
+        .ai-icon {
+            width: 48px;
+            height: 48px;
+            display: grid;
+            place-items: center;
+            border-radius: 15px;
+            color: white;
+            font-size: 23px;
+            background: linear-gradient(135deg, #3157d5, #7089ed);
+            box-shadow: 0 8px 20px rgba(49,87,213,.22);
+        }
+
+        .ai-top h2 {
+            font-size: 22px;
+        }
+
+        .online {
+            font-size: 12px;
+            color: #3c9a6b;
+            margin-top: 2px;
+        }
+
+        .online::before {
+            content: "●";
+            margin-right: 5px;
+        }
+
+        /* Question area */
+        form {
+            position: relative;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 175px;
+            resize: vertical;
+            padding: 20px 20px 72px;
+            border: 1.5px solid #dfe4ef;
+            border-radius: 20px;
+            outline: none;
+            background: #f9faff;
+            color: #20283a;
+            font-size: 16px;
+            line-height: 1.6;
+            transition: .25s;
+        }
+
+        textarea::placeholder {
+            color: #8b94a7;
+        }
+
+        textarea:focus {
+            border-color: #6c83e8;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(49,87,213,.08);
+        }
+
+        button {
+            position: absolute;
+            right: 13px;
+            bottom: 13px;
+            border: 0;
+            border-radius: 13px;
+            padding: 12px 21px;
+            background: linear-gradient(135deg, #3157d5, #637de7);
+            color: white;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(49,87,213,.22);
+            transition: .2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(49,87,213,.3);
+        }
+
+        /* Suggested questions */
+        .suggested {
+            margin-top: 20px;
+        }
+
+        .suggested-title {
+            font-size: 13px;
+            color: #747d90;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .question-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 9px;
+        }
+
+        .question {
+            border: 1px solid #e0e5ef;
+            background: #fff;
+            color: #4f596d;
+            border-radius: 12px;
+            padding: 9px 12px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .question:hover {
+            border-color: #9cacee;
+            color: #3157d5;
+            background: #f5f7ff;
+        }
+
+        /* Answer */
+        .answer {
+            margin-top: 25px;
+            padding: 24px;
+            border-radius: 20px;
+            background: #f5f7ff;
+            border: 1px solid #dfe5f8;
+        }
+
+        .answer-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 13px;
+            color: #25345f;
+        }
+
+        .answer-header span {
+            width: 34px;
+            height: 34px;
+            display: grid;
+            place-items: center;
+            border-radius: 10px;
+            background: #dfe7ff;
+            color: #3157d5;
+        }
+
+        .answer p {
+            color: #4d586c;
+            line-height: 1.75;
+            white-space: pre-wrap;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 18px;
+            color: #8991a2;
+            font-size: 12px;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 18px 12px;
+            }
+
+            .ai-card {
+                padding: 20px;
+                border-radius: 22px;
+            }
+
+            .header {
+                margin-top: 15px;
+            }
+
+            textarea {
+                min-height: 155px;
+            }
+
+            button {
+                padding: 11px 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <header class="header">
+        <div class="college-badge">🎓 COLLEGE AI ASSISTANT</div>
+
+        <h1>Ask <span>Anything.</span></h1>
+
+        <p>
+            Your smart college assistant. Ask questions about academics,
+            departments, courses, campus facilities, events and more.
+        </p>
+    </header>
+
+    <main class="ai-card">
+
+        <div class="ai-top">
+            <div class="ai-icon">✦</div>
+
+            <div>
+                <h2>College AI Assistant</h2>
+                <div class="online">Ready to answer</div>
+            </div>
+        </div>
+
+        <!-- This form sends the question to your Django backend -->
+        <form method="post">
+            {% csrf_token %}
+
+            <textarea
+                name="question"
+                id="question"
+                placeholder="Ask your college-related question here...
+
+Example: What courses are offered in the CSE department?"
+                required
+            ></textarea>
+
+            <button type="submit">Ask AI →</button>
+        </form>
+
+        <div class="suggested">
+            <div class="suggested-title">Try asking:</div>
+
+            <div class="question-list">
+                <div class="question"
+                     onclick="setQuestion('What courses are offered in the college?')">
+                    📚 Courses
+                </div>
+
+                <div class="question"
+                     onclick="setQuestion('What departments are available?')">
+                    🏫 Departments
+                </div>
+
+                <div class="question"
+                     onclick="setQuestion('What are the college facilities?')">
+                    🏢 Facilities
+                </div>
+
+                <div class="question"
+                     onclick="setQuestion('What are the college timings?')">
+                    🕐 Timings
+                </div>
+
+                <div class="question"
+                     onclick="setQuestion('What events are conducted in the college?')">
+                    🎉 Events
+                </div>
+
+                <div class="question"
+                     onclick="setQuestion('How can I contact the college?')">
+                    📞 Contact
+                </div>
+            </div>
+        </div>
+
+        {% if answer %}
+        <section class="answer">
+            <div class="answer-header">
+                <span>✦</span>
+                <strong>AI Answer</strong>
+            </div>
+
+            <p>{{ answer }}</p>
+        </section>
+        {% endif %}
+
+    </main>
+
+    <div class="footer">
+        College AI Assistant • Ask questions and get instant answers
+    </div>
+
+</div>
+
+<script>
+    function setQuestion(text) {
+        document.getElementById("question").value = text;
+        document.getElementById("question").focus();
+    }
+</script>
+
+</body>
+</html>
